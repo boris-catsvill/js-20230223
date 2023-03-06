@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset="UTF-8" />
+
+<body>
+  <div id="root"></div>
+</body>
+
+<script type="module">
+  class Component {
+    constructor(title = '', arr = []) {
+      this.title = title;
+      this.arr = arr;
+
+      this.render();
+    }
+
+    getTemplate () {
+      return `
+        <div class="bold">
+          <h1 class="title">${this.title}</h1>
+          <ul>
+            ${this.getListElements()}
+          </ul>
+        </div>
+      `
+    }
+
+    render () {
+      const tempWrapper = document.createElement('div');
+
+      tempWrapper.innerHTML = this.getTemplate();
+
+      this.element = tempWrapper.firstElementChild;
+    }
+
+    getListElements () {
+      return this.arr.map(item => {
+        return `<li>${item}</li>`;
+      }).join('');
+    }
+  }
+
+  const obj = new Component('hello world', [
+    'buy milk',
+    'go somewhere',
+    'todo something'
+  ]);
+
+  const rootElement = document.getElementById('root');
+
+  rootElement.append(obj.element);
+</script>
+
