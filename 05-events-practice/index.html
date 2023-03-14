@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<body>
+
+<div id="root"></div>
+
+<!--<button id="btn">Click me maybe?!</button>-->
+
+<!--<button id="btn2">Remove listener</button>-->
+
+</body>
+
+<script>
+  class Component {
+    onClick = () => {
+      console.error(this.title);
+    }
+
+    constructor(title) {
+      this.title = title;
+
+      this.render();
+      this.initListeners();
+    }
+
+    render () {
+      const wrapper = document.createElement('div');
+
+      wrapper.innerHTML = `
+        <div>
+          <h1>${this.title}</h1>
+          <button>Click me!</button>
+        </div>
+      `;
+
+      this.element = wrapper.firstElementChild;
+    }
+
+    initListeners () {
+      const btn = this.element.querySelector('button');
+
+      btn.addEventListener('pointerdown', this.onClick);
+    }
+
+    destroy () {
+      console.error('destroy has been called');
+
+      const btn = this.element.querySelector('button');
+
+      btn.removeEventListener('pointerdown', this.onClick);
+    }
+  }
+
+  const obj = new Component('My super title');
+
+  root.append(obj.element);
+
+  console.error(obj);
+</script>
+
+<script>
+  // class Component {
+  //   onClick = () => {
+  //     console.error('message', this.message);
+  //   }
+  //
+  //   constructor(message = '') {
+  //     this.message = message;
+  //     this.render();
+  //     this.initListeners();
+  //   }
+  //
+  //   render() {
+  //     this.element = document.createElement('div');
+  //
+  //     this.element.innerHTML = `
+  //       <div>
+  //         <h1>Hello my Component</h1>
+  //         <button>Click me!</button>
+  //       </div>
+  //     `;
+  //   }
+  //
+  //
+  //   initListeners () {
+  //     const btn = this.element.querySelector('button');
+  //
+  //     btn.addEventListener('click', this.onClick);
+  //   }
+  //
+  //   destroy () {
+  //     const btn = this.element.querySelector('button');
+  //
+  //     btn.removeEventListener('click', this.onClick);
+  //   }
+  // }
+
+  // const component = new Component('hello World!');
+</script>
