@@ -134,11 +134,15 @@ describe('events-practice/double-slider', () => {
       bubbles: true
     });
 
+    console.error(leftSlider.outerHTML);
+
     leftSlider.dispatchEvent(down);
     leftSlider.dispatchEvent(moveLeft);
 
     rightSlider.dispatchEvent(down);
     rightSlider.dispatchEvent(moveRight);
+
+    console.error(rightSlider.outerHTML);
 
     expect(leftBoundary).toHaveTextContent(doubleSlider.min);
     expect(rightBoundary).toHaveTextContent(doubleSlider.max);
