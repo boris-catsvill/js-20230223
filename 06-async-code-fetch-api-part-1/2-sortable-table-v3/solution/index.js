@@ -18,7 +18,7 @@ export default class SortableTable {
     const { bottom } = this.element.getBoundingClientRect();
     const { id, order } = this.sorted;
 
-    if (bottom < document.documentElement.clientHeight && !this.loading && !this.isSortLocally) {
+    if (bottom < document.documentElement.clientHeight && !this.loading) {
       this.start = this.end;
       this.end = this.start + this.step;
 
@@ -107,19 +107,37 @@ export default class SortableTable {
     this.initEventListeners();
   }
 
-  async loadData(id, order, start = this.start, end = this.end) {
+  toggleLoader (action = '') {
+    const loaderClassname = 'sortable-table_loading'
+
+    this.element.classList[action](loaderClassname);
+  }
+
+  showLoader () {
+    this.toggleLoader('add');
+  }
+
+  hideLoader () {
+    this.toggleLoader('remove')
+  }
+
+  async loadData (...props) {
+    this.showLoader();
+
+    const data = await this.load(...props);
+
+    this.hideLoader();
+
+    return data;
+  }
+
+  async load(id, order, start = this.start, end = this.end) {
     this.url.searchParams.set('_sort', id);
     this.url.searchParams.set('_order', order);
     this.url.searchParams.set('_start', start);
     this.url.searchParams.set('_end', end);
 
-    this.element.classList.add('sortable-table_loading');
-
-    const data = await fetchJson(this.url); // 10s, 20s...
-
-    this.element.classList.remove('sortable-table_loading');
-
-    return data;
+    return await fetchJson(this.url); // 10s, 20s...
   }
 
   addRows(data) {
@@ -211,7 +229,9 @@ export default class SortableTable {
   initEventListeners() {
     this.subElements.header.addEventListener('pointerdown', this.onSortClick);
 
-    window.addEventListener('scroll', this.onWindowScroll);
+    if (this.isSortLocally) {
+      window.addEventListener('scroll', this.onWindowScroll);
+    }
   }
 
   sortOnClient(id, order) {
@@ -280,7 +300,9 @@ export default class SortableTable {
     this.subElements = {};
     this.element = null;
 
-    window.removeEventListener('scroll', this.onWindowScroll);
+    if (this.isSortLocally) {
+      window.removeEventListener('scroll', this.onWindowScroll);
+    }
     // NOTE: alternative solution
     // this.abortController.abort();
   }

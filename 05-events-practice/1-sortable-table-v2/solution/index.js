@@ -142,7 +142,6 @@ export default class SortableTable {
         return direction * customSorting(a, b);
       default:
         throw new Error(`Неизвестный тип сортировки ${sortType}`);
-        // return direction * (a[id] - b[id]);
       }
     });
   }
